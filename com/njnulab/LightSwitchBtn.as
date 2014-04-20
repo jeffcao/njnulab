@@ -28,6 +28,7 @@ package com.njnulab
 		
 		public function init(dArry:Array):void
 		{
+			trace("LightSwitchBtn.init, dbArray: "+dArry)
 			if (dArry.length == 0)
 			{
 				return;

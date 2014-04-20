@@ -25,6 +25,11 @@ package com.njnulab
 		private var btnIndex:uint = 0;
 		private var list:XMLList;
 		
+		private var lightState:Array = []
+		private var lightKgMap:Array = []
+		private var kgState:Array = []
+		
+		
 		private var swtichBtnCon:Sprite;
 		private var lp:LightPanel;
 		private var btnSure:SimpleButton;
@@ -42,6 +47,7 @@ package com.njnulab
 			list = Main.lightReq;
 			initSo();
 			initObjs();
+			
 			
 		}
 		
@@ -61,16 +67,17 @@ package com.njnulab
 				var lsb:LightSwitchBtn =  new LightSwitchBtn();
 				switchArry.push(lsb);
 				lsb.Id = i;
-				lsb.DataArry = dataArry[i];
+				//lsb.DataArry = dataArry[i];
 				swtichBtnCon.addChild(lsb);
 				lsb.x = 32;
 				lsb.addEventListener(clickEvent, switchHandle);
 			}
-			switchArry[btnIndex].gotoAndStop(2);
-			switchArry[btnIndex].init(dataArry[btnIndex]);
-			kgFlag = kgArry[btnIndex];
-			setKgState(kgArry[btnIndex]);
-			setLightsState(dataArry[btnIndex], kgArry[btnIndex]);
+			setSwitchBtnState(btnIndex, switchArry[btnIndex]);
+			//switchArry[btnIndex].gotoAndStop(2);
+			//switchArry[btnIndex].init(dataArry[btnIndex]);
+			//kgFlag = kgArry[btnIndex];
+			//setKgState(kgArry[btnIndex]);
+			setLightsState();
 			switchArry[0].y = 142;
 			switchArry[1].y = 189;
 			switchArry[2].y = 237;
@@ -88,25 +95,48 @@ package com.njnulab
 		{
 			var my_so:SharedObject = SharedObject.getLocal("lightdata");
 			//my_so.clear();
-			if (my_so.data.arry == undefined)
+			if (my_so.data.lightState == undefined)
 			{
-				my_so.data.arry = [[], [], [], [], [], []];
-				my_so.data.kg = [0, 0, 0, 0, 0, 0];
+				my_so.data.lightState = [0, 0, 0, 0, 0, 0];
+				my_so.data.lightKgMap = [0, 0, 0, 0, 0, 0];
+				my_so.data.kgState = [0, 0, 0, 0, 0, 0]
 			}
-			dataArry = my_so.data.arry;
-			kgArry = my_so.data.kg;
-			trace("kgArry:"+kgArry)
+			lightState = my_so.data.lightState
+			lightKgMap = my_so.data.lightKgMap
+			kgState = my_so.data.kgState
+			trace("initSo.lightState: "+lightState)
+			trace("initSo.lightKgMap: " + lightKgMap)
+			trace("initSo.kgState: "+kgState)
 		}
 		
 		private function switchHandle(event:Event):void
 		{
 			var lsb:LightSwitchBtn = event.target as LightSwitchBtn;
-			lp.reset();
+			//lp.reset();
 			btnIndex = lsb.Id;
-			setKgState(kgArry[btnIndex]);
-			setLightsState(dataArry[btnIndex], kgArry[btnIndex]);
+			setSwitchBtnState(btnIndex, lsb);
+		}
+		
+		private function setSwitchBtnState(switchIndex:uint, lsb:LightSwitchBtn):void
+		{
+			var meControllLight = getMeControllLights()
+			
+			setKgState();
+			setLightControllState();
 			setSwitchState(lsb.Id);
-			lsb.init(dataArry[btnIndex]);
+			lsb.init(meControllLight);
+		}
+		private function getMeControllLights():Array
+		{
+			var meControllLight = []
+			for (var i:uint = 0; i < lightKgMap.length; i++)
+			{
+				if (lightKgMap[i] == btnIndex + 1) 
+				{
+					meControllLight.push(i);
+				}
+			}
+			return meControllLight;
 		}
 		
 		private function setSwitchState(id:uint):void
@@ -129,40 +159,92 @@ package com.njnulab
 		{
 			btnOn.gotoAndStop(1);
 			btnOff.gotoAndStop(2);
-			kgFlag = 0;
-			kgArry[btnIndex] = 0;
+			
+			saveLightKgMapData();
+			changeLightsState(0);
+			saveLightStateData();
+			setLightsState();
+			kgState[btnIndex] = 0
+			saveKgStateData();
 		}
-		
+		private function saveKgStateData():void
+		{
+			
+			var my_so:SharedObject = SharedObject.getLocal("lightdata");
+			my_so.data.kgState = kgState;
+			my_so.flush();
+			
+			trace("lightSystem.saveKgStateData, after save, kgState: "+kgState);
+			
+		}
+		private function changeLightsState(state:uint):void
+		{
+			var meControllLights = getMeControllLights()
+			
+			for (var i:uint = 0; i < meControllLights.length; i++ )
+			{
+				var strUrl = list[meControllLights[i]].children()[state];
+				trace("LightSystem.changeLightsState, strUrl: " +strUrl);
+				//var req:URLRequest = new URLRequest(strUrl);
+				//var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
+				//req.requestHeaders.push(req_header);
+				//sendToURL(req);
+				lightState[meControllLights[i]] = state;
+			}
+		}
 		private function onHandle(event:Event):void
 		{
 			btnOn.gotoAndStop(2);
 			btnOff.gotoAndStop(1);
-			kgFlag = 1;
-			kgArry[btnIndex] = 1;
+			
+			saveLightKgMapData();
+			changeLightsState(1);
+			saveLightStateData();
+			setLightsState();
+			kgState[btnIndex] = 1
+			saveKgStateData();
 		}
-		
-		private function setLightsState(sarry:Array,flag:uint=0):void
+		private function saveLightStateData():void
 		{
-			for (var i:uint = 0; i < lightArry.length; i++ )
+			var my_so:SharedObject = SharedObject.getLocal("lightdata");
+			my_so.data.lightState = lightState;
+			my_so.flush();
+			
+			trace("lightSystem.saveLightStateData, after save, lightState: "+lightState);
+		}
+		private function setLightsState():void
+		{
+			for (var i:uint = 0; i < lightState.length; i++ )
 			{
-				if (Global.isInArry(i, sarry))
+				if (lightState[i] == 0)
 				{
-					if (flag == 0)
-					{
-						lightArry[i].gotoAndStop(1);
-					}
-					else
-					{
-						lightArry[i].gotoAndStop(2);
-					}
-					lightArry[i].ck.gotoAndStop(2);
+					lightArry[i].gotoAndStop(1);
+				}
+				else
+				{
+					lightArry[i].gotoAndStop(2);
 				}
 			}
 		}
-		
-		private function setKgState(kgf:uint):void
+		private function setLightControllState():void
 		{
-			if (kgf == 0)
+			for (var i:uint = 0; i < lightKgMap.length; i++ )
+			{
+				if (lightKgMap[i] == btnIndex + 1)
+				{
+					lightArry[i].ck.gotoAndStop(2);
+				}
+				else
+				{
+					lightArry[i].ck.gotoAndStop(1);
+				}
+				
+			}
+		}
+		
+		private function setKgState():void
+		{
+			if (kgState[btnIndex] == 0)
 			{
 				btnOff.gotoAndStop(2);
 				btnOn.gotoAndStop(1);
@@ -172,39 +254,39 @@ package com.njnulab
 				btnOff.gotoAndStop(1);
 				btnOn.gotoAndStop(2);
 			}
-			kgFlag = kgf;
 		}
 		
 		private function sureHandle(event:Event):void
 		{
-			var arry:Array = [];
-			for (var i:uint = 0; i < lightArry.length; i++ )
-			{
-				if (lightArry[i].ck.currentFrame == 2)
-				{
-					arry.push(i);
-				}
-			}
-			var my_so:SharedObject = SharedObject.getLocal("lightdata");
-			dataArry[btnIndex] = arry;
-			my_so.data.arry = dataArry;
-			my_so.data.kg = kgArry;
-			my_so.flush();
-			var selectedArry:Array = lp.getSelected();
-			setLightsState(selectedArry, kgFlag);
-			switchArry[btnIndex].removeBoxChildren();
-			switchArry[btnIndex].putNumItem();
-			for (i = 0; i < dataArry[btnIndex].length; i++ )
-			{
-				trace(i + ":" + list[dataArry[btnIndex][i]].children()[kgArry[btnIndex]])
-				var req:URLRequest = new URLRequest(list[dataArry[btnIndex][i]].children()[kgArry[btnIndex]]);
-				var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
-				req.requestHeaders.push(req_header);
-				sendToURL(req);
-			}
-			
+			saveLightKgMapData();
+			changeLightsState(kgState[btnIndex]);
+			saveLightStateData();
+			setLightsState();
 		}
 		
+		private function saveLightKgMapData():void
+		{
+			trace("lightSystem.sureHandle, before save, lightKgMap: "+lightKgMap);
+			for (var i:uint = 0; i < lightArry.length; i++)
+			{
+					if (lightArry[i].ck.currentFrame == 2)
+					{
+						lightKgMap[i] = btnIndex + 1;
+					}
+					else if(lightKgMap[i] == btnIndex+1)
+					{
+						lightKgMap[i] = 0
+					}
+			}
+			
+			var my_so:SharedObject = SharedObject.getLocal("lightdata");
+			//dataArry[btnIndex] = arry;
+			my_so.data.lightKgMap = lightKgMap;
+			//my_so.data.kg = kgArry;
+			my_so.flush();
+			
+			trace("lightSystem.sureHandle, after save, lightKgMap: "+lightKgMap);
+		}
 		private function clickLightHandle(event:Event):void
 		{
 			var lf:uint = lightArry[lp.index].ck.currentFrame;
