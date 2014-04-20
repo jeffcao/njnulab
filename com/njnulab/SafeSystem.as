@@ -88,7 +88,11 @@ package com.njnulab
 			my_so.data.kg = kg;
 			my_so.flush();
 			trace(list.children()[kg])
-			var req:URLRequest = new URLRequest(list.children()[kg]);
+			
+			var strUrl:String = list.children()[kg];
+			strUrl =  Global.getCorrectUrl(strUrl);
+			
+			var req:URLRequest = new URLRequest(strUrl);
 			var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
 			req.requestHeaders.push(req_header);
 			sendToURL(req);

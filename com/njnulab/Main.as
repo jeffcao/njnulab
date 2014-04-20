@@ -19,6 +19,7 @@ package com.njnulab
 	import flash.ui.MultitouchInputMode;
 	import com.adobe.serialization.json.JSON;
 	import com.kiwind.utils.Base64;
+	import flash.net.SharedObject;
 	/**
 	 * ...
 	 * @author kiwind
@@ -77,8 +78,24 @@ package com.njnulab
 			_timer.start();
 			clickEvent = Global.getClickEvent();
 			initAction();
+			initAuthData();
 		}
 		
+		private function initAuthData()
+		{
+			var my_so:SharedObject = SharedObject.getLocal("authdata");
+			var authData = my_so.data.authdata
+			if (my_so.data.authdata == undefined)
+			{
+				authData = ["192.168.1.6", "admin", "123456", "Basic YWRtaW46MTIzNDU2"];
+				my_so.data.authdata = authData;
+				my_so.flush();
+			}
+			Global.authCode = authData[3];
+			Global.gateIp = authData[0];
+			trace("main.initAuthData, Global.authCode:" + Global.authCode);
+			trace("main.initAuthData, Global.gateIp:"+Global.gateIp);
+		}
 		private function loadControl(url:String):void
 		{
 			var loader:URLLoader = new URLLoader();

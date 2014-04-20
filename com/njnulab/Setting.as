@@ -15,6 +15,8 @@ package com.njnulab
 	import flash.text.TextFormat;
 	import fl.managers.StyleManager;
 	import com.kiwind.utils.Base64;
+	import flash.net.SharedObject;
+
 	/**
 	 * ...
 	 * @author kiwind
@@ -27,6 +29,8 @@ package com.njnulab
 		private var _btn:SimpleButton;
 		private var _tip:MovieClip;
 		private var clickEvent:String;
+		
+		private var authData:Array;
 		public function Setting() 
 		{
 			clickEvent = Global.getClickEvent();
@@ -44,11 +48,33 @@ package com.njnulab
 			_pwdIpt.setStyle("textFormat", htf);
 			
 			_btn.addEventListener(clickEvent, clickHandle);
+			initAuthData();
 		}
 		
+		private function initAuthData():void
+		{
+			var my_so:SharedObject = SharedObject.getLocal("authdata");
+			authData = my_so.data.authdata
+			_ipIpt.text = authData[0];
+			_userIpt.text = authData[1];
+			_pwdIpt.text = authData[2];
+			
+			trace("Setting.initAuthData, after authData:"+authData);
+		}
 		private function clickHandle(event:Event):void
 		{
-            var request:URLRequest = new URLRequest(Main.settingUrl);
+            
+			Global.authCode = "Basic " + Base64.encode(_userIpt.text + ":" + _pwdIpt.text);
+			Global.gateIp = _ipIpt.text;
+			authData[0] = _ipIpt.text;
+			authData[1] = _userIpt.text;
+			authData[2] = _pwdIpt.text;
+			authData[3] = Global.authCode;
+			trace("Setting.clickHandle, Global.authCode: " + Global.authCode);
+
+			var url:String = Global.getCorrectUrl(Main.settingUrl);
+			
+			var request:URLRequest = new URLRequest(url);
             var variables:URLVariables = new URLVariables();
             variables.ip = _ipIpt.text;
 			variables.username = _userIpt.text;
@@ -57,9 +83,19 @@ package com.njnulab
             request.data = variables;
             sendToURL(request);
 			_tip.alpha = 1;
-			Global.authCode = "Basic "+Base64.encode(_userIpt.text + ":" + _pwdIpt.text);
-			trace(Global.authCode);
+			
+			saveAuthData();
 		}
+		
+		private function saveAuthData():void
+		{
+			var my_so:SharedObject = SharedObject.getLocal("authdata");
+			my_so.data.authdata = authData;
+			my_so.flush();
+			
+			trace("lightSystem.saveAuthData, after save, authData: "+authData);
+		}
+		
 	}
 
 }

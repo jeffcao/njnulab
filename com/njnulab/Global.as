@@ -15,6 +15,7 @@ package com.njnulab
 		public static var stage = stage;
 		public static var isTouch:Boolean = Multitouch.supportsTouchEvents?true:false;
 		public static var clickEvent:String;
+		public static var gateIp = "192.168.1.6";
 		public static var authCode = "Basic YWRtaW46MTIzNDU2";
 		public function Global() 
 		{
@@ -47,6 +48,14 @@ package com.njnulab
 				}
 			}
 			return flag;
+		}
+		
+		public static function getCorrectUrl(strUrl:String):String
+		{
+			trace("Global.getCorrectUrl, strUrl: " +strUrl);
+			var newUrl =  strUrl.split("192.168.1.6").join(Global.gateIp);
+			trace("Global.getCorrectUrl, after replace, newUrl: " +newUrl);
+			return newUrl;
 		}
 	}
 

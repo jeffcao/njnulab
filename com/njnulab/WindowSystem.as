@@ -120,7 +120,9 @@ package com.njnulab
 			my_so.data.kg = kgArry;
 			my_so.flush();
 			clMc.gotoAndStop(kgArry[btnIndex] + 1);
-			var req:URLRequest = new URLRequest(list[btnIndex].children()[kgArry[btnIndex]]);
+			var strUrl:String = list[btnIndex].children()[kgArry[btnIndex]];
+			strUrl =  Global.getCorrectUrl(strUrl);
+			var req:URLRequest = new URLRequest(strUrl);
 			var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
 			req.requestHeaders.push(req_header);
 			sendToURL(req);

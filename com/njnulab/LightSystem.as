@@ -180,15 +180,18 @@ package com.njnulab
 		private function changeLightsState(state:uint):void
 		{
 			var meControllLights = getMeControllLights()
-			
+			trace("LightSystem.changeLightsState, Global.authCode: " +Global.authCode);
 			for (var i:uint = 0; i < meControllLights.length; i++ )
 			{
-				var strUrl = list[meControllLights[i]].children()[state];
+				var strUrl:String = list[meControllLights[i]].children()[state];
 				trace("LightSystem.changeLightsState, strUrl: " +strUrl);
-				//var req:URLRequest = new URLRequest(strUrl);
-				//var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
-				//req.requestHeaders.push(req_header);
-				//sendToURL(req);
+				strUrl =  Global.getCorrectUrl(strUrl);
+				
+				var req:URLRequest = new URLRequest(strUrl);
+				var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
+				req.requestHeaders.push(req_header);
+				sendToURL(req);
+				
 				lightState[meControllLights[i]] = state;
 			}
 		}
