@@ -4,9 +4,12 @@ package com.njnulab
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.SharedObject;
 	import flash.net.sendToURL;
+	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
 	import flash.events.TouchEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequestHeader;
@@ -186,15 +189,46 @@ package com.njnulab
 				var strUrl:String = list[meControllLights[i]].children()[state];
 				trace("LightSystem.changeLightsState, strUrl: " +strUrl);
 				strUrl =  Global.getCorrectUrl(strUrl);
-				
-				var req:URLRequest = new URLRequest(strUrl);
-				var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
-				req.requestHeaders.push(req_header);
-				sendToURL(req);
-				
+				try
+				{
+					var heards:Array = new Array();
+					var req:URLRequest = new URLRequest(strUrl);
+					req.method = URLRequestMethod.POST;
+					
+					heards.push(new URLRequestHeader("Authorization",Global.authCode));
+					req.requestHeaders = heards;
+					req.data = "hello"
+					
+					trace("LightSystem.changeLightsState, req.data: "+req.data);
+					var loader:URLLoader = new URLLoader();
+					loader.load(req);	
+					
+					loader.addEventListener(Event.COMPLETE, listRequestComplete);
+					loader.addEventListener(IOErrorEvent.IO_ERROR, ioError);
+					//sendToURL(req);
+				}
+				catch (e:Error)
+				{
+					trace("changeLightsState.sendToURL, erro: "+e.getStackTrace());
+				}
 				lightState[meControllLights[i]] = state;
 			}
 		}
+		
+		private function listRequestComplete(event:Event):void
+		{
+			//var data:String = String(event.target.data);
+            //var obj:Object = (com.adobe.serialization.json.JSON.decode(data) as Object);
+			//setWeatherInfo(obj);
+			trace("LightSystem.listRequestComplete");
+		}
+		
+		private function ioError(event:IOErrorEvent):void
+		{
+			//loadWeatherData(weatherUrl);
+			trace("LightSystem.ioError");
+		}
+		
 		private function onHandle(event:Event):void
 		{
 			btnOn.gotoAndStop(2);
