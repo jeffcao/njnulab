@@ -6,6 +6,13 @@ package com.njnulab
 	import flash.events.MouseEvent;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLRequestHeader;
+	import flash.events.IOErrorEvent;
+	import flash.events.Event;
+	
+	import com.kiwind.utils.HTTPURLLoader;
 	/**
 	 * ...
 	 * @author ...
@@ -56,6 +63,22 @@ package com.njnulab
 			var newUrl =  strUrl.split("192.168.1.6").join(Global.gateIp);
 			trace("Global.getCorrectUrl, after replace, newUrl: " +newUrl);
 			return newUrl;
+		}
+		
+		public static function GetHTTPURLLoader(strUrl:String, complete_func:Function, error_func:Function): void
+		{
+			var heards:Array = new Array();
+			var req:URLRequest = new URLRequest(strUrl);
+			req.method = URLRequestMethod.GET;
+			
+			heards.push(new URLRequestHeader("Authorization",Global.authCode));
+			req.requestHeaders = heards;
+			//var loader:URLLoader = new URLLoader();
+			var loader:HTTPURLLoader = new HTTPURLLoader();
+			loader.load(req);	
+			
+			loader.addEventListener(Event.COMPLETE, complete_func);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, error_func);
 		}
 	}
 

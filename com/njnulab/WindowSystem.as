@@ -10,6 +10,7 @@ package com.njnulab
 	import flash.net.URLRequest;
 	import flash.net.sendToURL;
 	import flash.net.URLRequestHeader;
+	import flash.events.IOErrorEvent;
 	/**
 	 * ...
 	 * @author kiwind
@@ -122,12 +123,21 @@ package com.njnulab
 			clMc.gotoAndStop(kgArry[btnIndex] + 1);
 			var strUrl:String = list[btnIndex].children()[kgArry[btnIndex]];
 			strUrl =  Global.getCorrectUrl(strUrl);
-			var req:URLRequest = new URLRequest(strUrl);
-			var req_header:URLRequestHeader = new URLRequestHeader("Authorization",Global.authCode);
-			req.requestHeaders.push(req_header);
-			sendToURL(req);
+			Global.GetHTTPURLLoader(strUrl, listRequestComplete, ioError);
+		}
+		private function listRequestComplete(event:Event):void
+		{
+			//var data:String = String(event.target.data);
+            //var obj:Object = (com.adobe.serialization.json.JSON.decode(data) as Object);
+			//setWeatherInfo(obj);
+			trace("WindowSystem.listRequestComplete");
 		}
 		
+		private function ioError(event:IOErrorEvent):void
+		{
+			//loadWeatherData(weatherUrl);
+			trace("WindowSystem.ioError");
+		}
 		private function setSwitchState(id:uint):void
 		{
 			for (var i:uint = 0; i < switchArry.length; i++ )

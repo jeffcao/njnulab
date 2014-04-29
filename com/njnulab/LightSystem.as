@@ -13,6 +13,8 @@ package com.njnulab
 	import flash.events.TouchEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequestHeader;
+	
+		
 	/**
 	 * ...
 	 * @author kiwind
@@ -122,11 +124,12 @@ package com.njnulab
 		
 		private function setSwitchBtnState(switchIndex:uint, lsb:LightSwitchBtn):void
 		{
-			var meControllLight = getMeControllLights()
+			
 			
 			setKgState();
 			setLightControllState();
 			setSwitchState(lsb.Id);
+			var meControllLight = getMeControllLights()
 			lsb.init(meControllLight);
 		}
 		private function getMeControllLights():Array
@@ -187,25 +190,12 @@ package com.njnulab
 			for (var i:uint = 0; i < meControllLights.length; i++ )
 			{
 				var strUrl:String = list[meControllLights[i]].children()[state];
+				strUrl = strUrl  + (new Date()).getTime();
 				trace("LightSystem.changeLightsState, strUrl: " +strUrl);
 				strUrl =  Global.getCorrectUrl(strUrl);
 				try
 				{
-					var heards:Array = new Array();
-					var req:URLRequest = new URLRequest(strUrl);
-					req.method = URLRequestMethod.POST;
-					
-					heards.push(new URLRequestHeader("Authorization",Global.authCode));
-					req.requestHeaders = heards;
-					req.data = "hello"
-					
-					trace("LightSystem.changeLightsState, req.data: "+req.data);
-					var loader:URLLoader = new URLLoader();
-					loader.load(req);	
-					
-					loader.addEventListener(Event.COMPLETE, listRequestComplete);
-					loader.addEventListener(IOErrorEvent.IO_ERROR, ioError);
-					//sendToURL(req);
+					Global.GetHTTPURLLoader(strUrl, listRequestComplete, ioError);
 				}
 				catch (e:Error)
 				{
@@ -240,6 +230,7 @@ package com.njnulab
 			setLightsState();
 			kgState[btnIndex] = 1
 			saveKgStateData();
+			//ExternalInterface.call("alert", "设置成功!");
 		}
 		private function saveLightStateData():void
 		{
@@ -299,6 +290,7 @@ package com.njnulab
 			changeLightsState(kgState[btnIndex]);
 			saveLightStateData();
 			setLightsState();
+			//ExternalInterface.call("alert", "设置成功!");
 		}
 		
 		private function saveLightKgMapData():void
@@ -322,6 +314,8 @@ package com.njnulab
 			//my_so.data.kg = kgArry;
 			my_so.flush();
 			
+			var meControllLight = getMeControllLights()
+			switchArry[btnIndex].init(meControllLight);
 			trace("lightSystem.sureHandle, after save, lightKgMap: "+lightKgMap);
 		}
 		private function clickLightHandle(event:Event):void
