@@ -16,6 +16,7 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="." />
+    <class path="..\..\..\..\..\dev-tools\flex_sdk_4\frameworks" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -65,6 +66,7 @@
   <!-- Intrinsic Libraries -->
   <intrinsics>
     <element path="Library\AS3\frameworks\FlashIDE" />
+    <element path="Library\AS3\frameworks\Flex4" />
   </intrinsics>
   <!-- Assets to embed into the output SWF -->
   <library>

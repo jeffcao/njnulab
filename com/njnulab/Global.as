@@ -12,6 +12,11 @@ package com.njnulab
 	import flash.events.IOErrorEvent;
 	import flash.events.Event;
 	
+	import code.google.as3httpclient.ContentType;
+	import code.google.as3httpclient.HTTPResponseHeader;
+	import code.google.as3httpclient.SocketURLLoader;
+	import code.google.as3httpclient.SocketURLRequestMethod;
+	
 	import com.kiwind.utils.HTTPURLLoader;
 	/**
 	 * ...
@@ -70,11 +75,13 @@ package com.njnulab
 			var heards:Array = new Array();
 			var req:URLRequest = new URLRequest(strUrl);
 			req.method = URLRequestMethod.GET;
-			
+			heards.push(new URLRequestHeader("Accept-Language:","zh-cn"));
+			heards.push(new URLRequestHeader("Connection","Keep-Alive"));
 			heards.push(new URLRequestHeader("Authorization",Global.authCode));
 			req.requestHeaders = heards;
 			//var loader:URLLoader = new URLLoader();
-			var loader:HTTPURLLoader = new HTTPURLLoader();
+			//var loader:HTTPURLLoader = new HTTPURLLoader();
+			var loader:SocketURLLoader = new SocketURLLoader();
 			loader.load(req);	
 			
 			loader.addEventListener(Event.COMPLETE, complete_func);

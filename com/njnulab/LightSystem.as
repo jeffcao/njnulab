@@ -13,7 +13,6 @@ package com.njnulab
 	import flash.events.TouchEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequestHeader;
-	
 		
 	/**
 	 * ...
@@ -190,7 +189,7 @@ package com.njnulab
 			for (var i:uint = 0; i < meControllLights.length; i++ )
 			{
 				var strUrl:String = list[meControllLights[i]].children()[state];
-				strUrl = strUrl  + (new Date()).getTime();
+				//strUrl = strUrl  + (new Date()).getTime();
 				trace("LightSystem.changeLightsState, strUrl: " +strUrl);
 				strUrl =  Global.getCorrectUrl(strUrl);
 				try
