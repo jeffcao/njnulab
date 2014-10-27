@@ -13,6 +13,7 @@ package com.njnulab
 	import flash.events.TouchEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequestHeader;
+	
 		
 	/**
 	 * ...
@@ -39,6 +40,9 @@ package com.njnulab
 		private var btnSure:SimpleButton;
 		private var btnOff:MovieClip;
 		private var btnOn:MovieClip;
+		private var btnLightOn:MovieClip;
+		private var btnLightOff:MovieClip;
+		
 		
 		public function LightSystem() 
 		{
@@ -65,8 +69,11 @@ package com.njnulab
 			btnSure = this.getChildByName("surebtn") as SimpleButton;
 			btnOff = this.getChildByName("offbtn") as MovieClip;
 			btnOn = this.getChildByName("onbtn") as MovieClip;
+			btnLightOn = this.getChildByName("newOnBtn") as MovieClip;
+			btnLightOff = this.getChildByName("newOffBtn") as MovieClip;
+			
 			btnOff.gotoAndStop(2);
-			for (var i:uint = 0; i < 6; i++ )
+			for (var i:uint = 0; i < 1; i++ )
 			{
 				var lsb:LightSwitchBtn =  new LightSwitchBtn();
 				switchArry.push(lsb);
@@ -83,18 +90,61 @@ package com.njnulab
 			//setKgState(kgArry[btnIndex]);
 			setLightsState();
 			switchArry[0].y = 142;
-			switchArry[1].y = 189;
+			/*switchArry[1].y = 189;
 			switchArry[2].y = 237;
 			switchArry[3].y = 286;
 			switchArry[4].y = 334;
-			switchArry[5].y = 383;
+			switchArry[5].y = 383;*/
 			
 			btnOff.addEventListener(clickEvent, offHandle);
 			btnOn.addEventListener(clickEvent, onHandle);
 			btnSure.addEventListener(clickEvent, sureHandle);
 			lp.addEventListener("clickLight", clickLightHandle);
+			
+			btnLightOn.addEventListener(clickEvent, btnLightOnHandle);
+			//btnLightOff.addEventListener(clickEvent, btnLightOffHandle);
 		}
 		
+		private function btnLightOnHandle(event:Event):void {
+			btnOn.gotoAndStop(2);
+			btnOff.gotoAndStop(1);
+			
+			saveLightKgMapData();
+			changeLightsState(1);
+			saveLightStateData();
+			setLightsState();
+			kgState[btnIndex] = 1
+			saveKgStateData();
+			showKgLightMap();
+			
+			
+			saveLightKgMapData();
+			changeLightsState(kgState[btnIndex]);
+			saveLightStateData();
+			setLightsState();
+			showKgLightMap();
+			
+			
+		}
+		private function btnLightOffHandle(event:Event):void {
+			btnOn.gotoAndStop(1);
+			btnOff.gotoAndStop(2);
+			
+			saveLightKgMapData();
+			changeLightsState(0);
+			saveLightStateData();
+			setLightsState();
+			kgState[btnIndex] = 0
+			saveKgStateData();
+			showKgLightMap();
+			
+			
+			saveLightKgMapData();
+			changeLightsState(kgState[btnIndex]);
+			saveLightStateData();
+			setLightsState();
+			showKgLightMap();
+		}
 		private function initSo():void
 		{
 			var my_so:SharedObject = SharedObject.getLocal("lightdata");
@@ -123,25 +173,36 @@ package com.njnulab
 		
 		private function setSwitchBtnState(switchIndex:uint, lsb:LightSwitchBtn):void
 		{
-			
-			
 			setKgState();
 			setLightControllState();
 			setSwitchState(lsb.Id);
-			var meControllLight = getMeControllLights()
-			lsb.init(meControllLight);
+			//var meControllLight = getMeControllLights()
+			//lsb.init(meControllLight);
+			showKgLightMap();
 		}
-		private function getMeControllLights():Array
+		private function getMeControllLights(lsbIndex):Array
 		{
 			var meControllLight = []
 			for (var i:uint = 0; i < lightKgMap.length; i++)
 			{
-				if (lightKgMap[i] == btnIndex + 1) 
+				if (lightKgMap[i] == lsbIndex + 1) 
 				{
 					meControllLight.push(i);
 				}
 			}
 			return meControllLight;
+		}
+		private function showKgLightMap():void
+		{
+			var meControllLight = null;
+			var lsb = null;
+			for (var i:uint = 0; i < switchArry.length; i++)
+			{
+				lsb = switchArry[i];
+				meControllLight = getMeControllLights(lsb.Id);
+				lsb.init(meControllLight);
+			}
+			
 		}
 		
 		private function setSwitchState(id:uint):void
@@ -171,6 +232,7 @@ package com.njnulab
 			setLightsState();
 			kgState[btnIndex] = 0
 			saveKgStateData();
+			showKgLightMap();
 		}
 		private function saveKgStateData():void
 		{
@@ -184,7 +246,7 @@ package com.njnulab
 		}
 		private function changeLightsState(state:uint):void
 		{
-			var meControllLights = getMeControllLights()
+			var meControllLights = getMeControllLights(btnIndex)
 			trace("LightSystem.changeLightsState, Global.authCode: " +Global.authCode);
 			for (var i:uint = 0; i < meControllLights.length; i++ )
 			{
@@ -210,6 +272,7 @@ package com.njnulab
             //var obj:Object = (com.adobe.serialization.json.JSON.decode(data) as Object);
 			//setWeatherInfo(obj);
 			trace("LightSystem.listRequestComplete");
+			//Alert("ok");
 		}
 		
 		private function ioError(event:IOErrorEvent):void
@@ -229,6 +292,7 @@ package com.njnulab
 			setLightsState();
 			kgState[btnIndex] = 1
 			saveKgStateData();
+			showKgLightMap();
 			//ExternalInterface.call("alert", "设置成功!");
 		}
 		private function saveLightStateData():void
@@ -289,6 +353,7 @@ package com.njnulab
 			changeLightsState(kgState[btnIndex]);
 			saveLightStateData();
 			setLightsState();
+			showKgLightMap();
 			//ExternalInterface.call("alert", "设置成功!");
 		}
 		
@@ -312,9 +377,6 @@ package com.njnulab
 			my_so.data.lightKgMap = lightKgMap;
 			//my_so.data.kg = kgArry;
 			my_so.flush();
-			
-			var meControllLight = getMeControllLights()
-			switchArry[btnIndex].init(meControllLight);
 			trace("lightSystem.sureHandle, after save, lightKgMap: "+lightKgMap);
 		}
 		private function clickLightHandle(event:Event):void

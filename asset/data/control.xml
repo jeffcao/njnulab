@@ -1,52 +1,52 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <data>
 	<!--实验室配置文件地址-->
 	<labUrl><![CDATA[asset/data/lab.xml]]></labUrl>
 	<!--灯光系统请求地址-->
 	<lightControl>
 		<light>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=10&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=10&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=2&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=2&ba=1&page=1]]></url>
 		</light>
 		<light>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=11&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=11&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=1&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=1&ba=1&page=1]]></url>
 		</light>
 		<light>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=7&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=7&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=3&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=3&ba=1&page=1]]></url>
 		</light>
 		<light>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=12&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=12&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=1&page=1]]></url>
 		</light>
 		<light>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=11&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=11&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=5&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=5&ba=1&page=1]]></url>
 		</light>
 		<light>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=13&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=13&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=6&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=6&ba=1&page=1]]></url>
 		</light>
 	</lightControl>
 	<!--窗帘系统请求地址-->
 	<clControl>
 		<cl>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=1&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=2&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=7&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=7&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=7&ba=2&page=1]]></url>
 		</cl>
 		<cl>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=1&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=2&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=8&ba=0&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=8&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=8&ba=2&page=1]]></url>
 		</cl>
 	</clControl>
 	<!--安防系统请求地址-->
 	<safeControl>
 		<safe>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=0&page=1]]></url>
-			<url><![CDATA[http://192.168.1.6/conb.html?bid=4&ba=1&page=1]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=29&ba=1&page=2]]></url>
+			<url><![CDATA[http://192.168.1.6/conb.html?bid=29&ba=0&page=2]]></url>
 		</safe>
 	</safeControl>
 	<!--智能网关设置地址, post方式 参数为ip -->

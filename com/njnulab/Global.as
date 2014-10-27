@@ -34,6 +34,15 @@ package com.njnulab
 			
 		}
 		
+		public static function clearArray(aObj:Array):Array
+		{
+			aObj.length = 0;
+			while (aObj.numChildren > 0)
+			{
+				aObj.removeChildAt(0);
+			}
+			return aObj;
+		}
 		
 		public static function getClickEvent():String {
 			if (isTouch)
