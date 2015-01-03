@@ -40,8 +40,8 @@ package com.njnulab
 		private var btnSure:SimpleButton;
 		private var btnOff:MovieClip;
 		private var btnOn:MovieClip;
-		private var btnLightOn:MovieClip;
-		private var btnLightOff:MovieClip;
+		private var btnLightOn:SimpleButton;
+		private var btnLightOff:SimpleButton;
 		
 		
 		public function LightSystem() 
@@ -69,8 +69,8 @@ package com.njnulab
 			btnSure = this.getChildByName("surebtn") as SimpleButton;
 			btnOff = this.getChildByName("offbtn") as MovieClip;
 			btnOn = this.getChildByName("onbtn") as MovieClip;
-			btnLightOn = this.getChildByName("newOnBtn") as MovieClip;
-			btnLightOff = this.getChildByName("newOffBtn") as MovieClip;
+			btnLightOn = this.getChildByName("newOnBtn") as SimpleButton;
+			btnLightOff = this.getChildByName("newOffBtn") as SimpleButton;
 			
 			btnOff.gotoAndStop(2);
 			for (var i:uint = 0; i < 1; i++ )
@@ -102,48 +102,18 @@ package com.njnulab
 			lp.addEventListener("clickLight", clickLightHandle);
 			
 			btnLightOn.addEventListener(clickEvent, btnLightOnHandle);
-			//btnLightOff.addEventListener(clickEvent, btnLightOffHandle);
+			btnLightOff.addEventListener(clickEvent, btnLightOffHandle);
 		}
 		
 		private function btnLightOnHandle(event:Event):void {
-			btnOn.gotoAndStop(2);
-			btnOff.gotoAndStop(1);
+			onHandle(event);
 			
-			saveLightKgMapData();
-			changeLightsState(1);
-			saveLightStateData();
-			setLightsState();
-			kgState[btnIndex] = 1
-			saveKgStateData();
-			showKgLightMap();
-			
-			
-			saveLightKgMapData();
-			changeLightsState(kgState[btnIndex]);
-			saveLightStateData();
-			setLightsState();
-			showKgLightMap();
-			
-			
+			sureHandle(event);
 		}
 		private function btnLightOffHandle(event:Event):void {
-			btnOn.gotoAndStop(1);
-			btnOff.gotoAndStop(2);
+			offHandle(event);
 			
-			saveLightKgMapData();
-			changeLightsState(0);
-			saveLightStateData();
-			setLightsState();
-			kgState[btnIndex] = 0
-			saveKgStateData();
-			showKgLightMap();
-			
-			
-			saveLightKgMapData();
-			changeLightsState(kgState[btnIndex]);
-			saveLightStateData();
-			setLightsState();
-			showKgLightMap();
+			sureHandle(event);
 		}
 		private function initSo():void
 		{

@@ -24,6 +24,7 @@ package com.njnulab
 			numBox = new Sprite();
 			addChild(numBox);
 			numBox.x = 90;
+			numBox.visible = false;
 		}
 		
 		public function init(dArry:Array):void

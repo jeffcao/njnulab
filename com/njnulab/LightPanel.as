@@ -31,15 +31,15 @@ package com.njnulab
 			if (ck.currentFrame == 1)
 			{
 				ck.gotoAndStop(2);
-				if (LightSystem.kgFlag == 1)
-				{
-					light.gotoAndStop(2);
-				}
+				//if (LightSystem.kgFlag == 1)
+				//{
+					//light.gotoAndStop(2);
+				//}
 			}
 			else
 			{
 				ck.gotoAndStop(1);
-				light.gotoAndStop(1);
+				//light.gotoAndStop(1);
 			}
 			dispatchEvent(new Event("clickLight"));
 		}
